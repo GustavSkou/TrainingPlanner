@@ -1,0 +1,6 @@
+@TrainingPlanner.API_HostAddress = http://localhost:5029
+
+GET {{TrainingPlanner.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
