@@ -10,7 +10,6 @@ public partial class Program
             options.AddDefaultPolicy(p =>
                 p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
         builder.WebHost.UseUrls("http://localhost:5027");
-
         var mvcBuilder = builder.Services.AddControllers();
         
         var app = builder.Build();
