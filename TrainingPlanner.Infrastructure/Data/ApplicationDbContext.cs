@@ -1,0 +1,78 @@
+using Microsoft.EntityFrameworkCore;
+using TrainingPlanner.Domain.Entities;
+
+namespace TrainingPlanner.Infrastructure.Data;
+
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<TrainingType> TrainingTypes { get; set; }
+    public DbSet<TrainingPlan> TrainingPlans { get; set; }
+    public DbSet<Workout> Workouts { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // User configuration
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.FirstName).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.LastName).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Email).IsRequired().HasMaxLength(256);
+            entity.HasIndex(e => e.Email).IsUnique();
+        });
+
+        // TrainingType configuration
+        modelBuilder.Entity<TrainingType>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+        });
+
+        // TrainingPlan configuration
+        modelBuilder.Entity<TrainingPlan>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.TrainingPlans)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.TrainingType)
+                .WithMany(t => t.TrainingPlans)
+                .HasForeignKey(e => e.TrainingTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Workout configuration
+        modelBuilder.Entity<Workout>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Notes).HasMaxLength(2000);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Workouts)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.TrainingPlan)
+                .WithMany(tp => tp.Workouts)
+                .HasForeignKey(e => e.TrainingPlanId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+}
+

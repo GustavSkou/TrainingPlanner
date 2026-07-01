@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.EntityFrameworkCore;
+using TrainingPlanner.Infrastructure.Data;
 
 public partial class Program
 {
@@ -9,10 +10,16 @@ public partial class Program
         builder.Services.AddCors(options =>
             options.AddDefaultPolicy(p =>
                 p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-        builder.WebHost.UseUrls("http://localhost:5027");
-        var mvcBuilder = builder.Services.AddControllers();
-        
+
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        Console.WriteLine("connection string:" + connectionString);
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(connectionString));
+
+        builder.Services.AddControllers();
+
         var app = builder.Build();
+        app.Urls.Add("http://localhost:5001");
         app.UseCors();
         app.MapControllers();
 
