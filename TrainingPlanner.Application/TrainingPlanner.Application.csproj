@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.11" />
     <PackageReference Include="Microsoft.OpenApi" Version="3.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TrainingPlanner.Domain\TrainingPlanner.Domain.csproj" />
+    <ProjectReference Include="..\TrainingPlanner.Infrastructure\TrainingPlanner.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
