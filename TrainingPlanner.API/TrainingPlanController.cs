@@ -4,7 +4,7 @@ namespace TrainingPlanner.API.Controllers;
 
 [ApiController]
 [Route("plans")]
-public class TrainingController : ControllerBase
+public class TrainingPlanController : ControllerBase
 {
     [HttpGet("TEST")]
     public ActionResult<object> GetTest()
