@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TrainingPlanner.Infrastructure.Data;
+using TrainingPlanner.Infrastructure.Configuration;
 
 public partial class Program
 {
@@ -11,12 +11,14 @@ public partial class Program
             options.AddDefaultPolicy(p =>
                 p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        /*var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         Console.WriteLine("connection string:" + connectionString);
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
-
+        */
         builder.Services.AddControllers();
+
+        builder.Services.AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
         app.Urls.Add("http://localhost:5001");
