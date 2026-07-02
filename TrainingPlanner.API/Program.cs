@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TrainingPlanner.Application.Contracts;
+using TrainingPlanner.Application.Services;
 using TrainingPlanner.Infrastructure.Configuration;
 
 public partial class Program
@@ -19,6 +21,7 @@ public partial class Program
         builder.Services.AddControllers();
 
         builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddScoped<IUserService, UserService>();
 
         var app = builder.Build();
         app.Urls.Add("http://localhost:5001");
